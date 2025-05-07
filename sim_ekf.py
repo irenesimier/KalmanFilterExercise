@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import RK45
 import math
 from system import System
-from kalman_filter import KalmanFilter 
+from kalman_filter import KalmanFilter, ExtendedKalmanFilter
 from discretization import van_loan_discretization
 
 # --------- SETUP ---------
@@ -20,14 +20,15 @@ solver = RK45(lambda t, x: sys.mass_spring_damper(t, x), 0, x0, sim_time, max_st
 # Discrete-time model for Kalman Filter
 A = np.array([[0, 1], [0, 0]])
 B = np.array([[0], [1]])
-C = np.array([[1, 0]])
 L = np.array([[0], [1]])
 R = 0.05  # Variance of position measurement noise
 Q = 0.1  # Variance of accelerometer noise
 P0 = np.eye(2) * 0.1
 x0_estimate = np.random.multivariate_normal(x0, cov=P0).reshape(2, 1)
 Ad, Bd, Qkf = van_loan_discretization(A, B, L, Q, dt)
-kf = KalmanFilter(Ad, Bd, C, Qkf, R, x0_estimate, P0)
+h = 5
+d = 5
+kf = ExtendedKalmanFilter(Ad, Bd, Qkf, R, x0_estimate, P0, d, h)
 
 # --------- SIM ---------
 
@@ -42,8 +43,8 @@ velocity_error = []
 position_bounds = []
 velocity_bounds = []
 
-# Simulate the system and generate noisy measurements
 counter = 0
+# Simulate the system and generate noisy measurements
 while solver.t < sim_time:
     solver.step()
     times.append(solver.t)
@@ -54,17 +55,14 @@ while solver.t < sim_time:
     true_velocity.append(state[1])
     
     # Get sensor data
-    measured_pos = sys.noisy_position(state, R)
+    measured_dist = sys.distance_from_wall(state, d, h, R)
+    measured_pos = np.sqrt(np.abs(measured_dist**2 - h**2)) - d
     measured_position.append(measured_pos)
     measured_accel = sys.noisy_acceleration(solver.t, state, Q)
     
     # Kalman Filter
     kf.predict(measured_accel)
-    if counter == 10: 
-        kf.update(measured_pos)
-        counter = 0
-    else:
-        counter += 1
+    kf.update(measured_dist)
     filtered_state = kf.get_state()
     filtered_position.append(filtered_state[0])
     filtered_velocity.append(filtered_state[1])
@@ -130,6 +128,5 @@ axs[1, 1].set_ylabel("Error [m/s]")
 axs[1, 1].grid(True)
 axs[1, 1].legend()
 
-# Adjust layout and show the plots
 plt.tight_layout()
 plt.show()

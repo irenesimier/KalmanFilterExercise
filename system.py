@@ -36,3 +36,8 @@ class System:
         noise = np.random.normal(0, np.sqrt(R), 1)
         y = x[0] + noise
         return y
+    
+    def distance_from_wall(self, x, d, h, R):
+        noise = np.random.normal(0, np.sqrt(R), 1)
+        y = math.sqrt((d+x[0])**2 + h**2) + noise
+        return y
