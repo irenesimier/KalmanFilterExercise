@@ -22,10 +22,7 @@ class KalmanFilter:
         I = np.eye(self.P.shape[0])
         self.P = (I - K @ self.C) @ self.P @ (I - K @ self.C).T + K * self.R @ K.T
 
-
     def get_state(self, measured_pos, measured_accel):
-        self.predict(measured_accel)
-        self.update(measured_pos)
         return self.x
     
     def get_covariance(self):

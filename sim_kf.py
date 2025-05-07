@@ -39,6 +39,7 @@ velocity_error = []
 position_bounds = []
 velocity_bounds = []
 
+counter = 0
 # Simulate the system and generate noisy measurements
 while solver.t < sim_time:
     solver.step()
@@ -55,7 +56,13 @@ while solver.t < sim_time:
     measured_accel = sys.noisy_acceleration(solver.t, state, Q)
     
     # Kalman Filter
-    filtered_state = kf.get_state(measured_pos, measured_accel)
+    kf.predict(measured_accel)
+    if counter == 10: 
+        kf.update(measured_pos)
+        counter = 0
+    else:
+        counter += 1
+    filtered_state = kf.get_state()
     filtered_position.append(filtered_state[0])
     filtered_velocity.append(filtered_state[1])
     
