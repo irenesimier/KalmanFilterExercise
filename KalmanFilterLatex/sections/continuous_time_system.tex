@@ -1,0 +1,40 @@
+\section{Continuous Time System}
+
+Since acceleration is measured directly, we can simplify the model 
+to a kinematic relation:
+
+\begin{equation}
+\ddot{r}(t) = u_{\text{acc}}(t)
+\label{eq:kinematics}
+\end{equation}
+
+This allows us to avoid modeling the full mass-spring-damper dynamics 
+involving forces and mass.
+
+The state-space form is now given by
+    
+\begin{equation}
+    \dot{\mathbf{x}}(t) = 
+    \begin{bmatrix}
+    0 & 1 \\
+    0 & 0
+    \end{bmatrix}
+    \mathbf{x}(t) +
+    \begin{bmatrix}
+    0 \\
+    1
+    \end{bmatrix}
+    u_{\text{acc}}(t)
+    \label{eq:continuous_system}
+\end{equation}
+
+\begin{equation}
+    \begin{aligned}
+        y(t) &= 
+        \begin{bmatrix}
+            1 & 0
+        \end{bmatrix}
+        \mathbf{x}(t) + v(t)
+    \end{aligned}
+\end{equation}
+    

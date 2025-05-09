@@ -1,0 +1,93 @@
+\documentclass[12pt]{decar-wsd}    % Document style
+
+\usepackage{lastpage}
+\usepackage{decar-common}    % Commonly used commands and packages
+\usepackage{decar-dynamics}  % Dynamics commands (load only if needed)
+\usepackage{decar-lie}       % Lie group commands (load only if needed)
+\usepackage{todonotes}        % Load whatever other packages you want here
+\usepackage{decar-post}      % Packages that must be loaded last
+\usepackage{amsmath}
+\usepackage{amssymb}
+% Reset equation numbers at each section
+\usepackage{chngcntr}
+% \usepackage{lastpage}
+
+\newcommand{\minus}{\ominus}
+\newcommand{\plus}{\oplus}
+\newcommand{\del}{\partial}
+\newcommand{\dxi}{\delta \mbs{\xi}}
+\newcommand{\nav}{\mathrm{nav}}
+\newcommand{\Hessdx}[1]{\frac{\del^2 #1}{\del \mbf{x} \del \mbf{x}^\trans}}
+\newcommand{\Jacdx}[1]{\frac{\del #1}{\del \mbf{x}}}
+\newcommand{\JacdxT}[1]{\frac{\del #1}{\del \mbf{x}^\trans}}
+\newcommand{\kmax}{{k^*}}
+\newcommand{\ErrDim}{{n_\textrm{e}}}
+\newcommand{\Dee}{D}
+\newcommand{\StateDim}{{n_\textrm{x}}}
+\newcommand{\LogSumExp}{{\textrm{LogSumExp}}}
+\newcommand{\Gaussian}[1]{\mc{N}\left(#1\right)}
+\newcommand{\HessianGen}{\mc{H}}
+
+\newcommand{\LiwLandmark}{{l_\LiwLandmarkIdx}}
+\newcommand{\LiwTimeIdx}{i}
+\newcommand{\ErrJacSolver}{\mbf{J}}
+\newcommand{\GmmNormConst}[1]{{\gamma_{\text{#1}}}}
+\newcommand{\NumComp}{{n_k}}
+\newcommand{\MonomialsToDegree}[2]{[#1]_{#2}}
+\newcommand{\SparseMonomialsToDegree}[2]{[#1]_{#2, s}}
+\newcommand{\mbsxi}{{\mbs{\xi}}}
+\newcommand{\lndmrk}{{\mbs{\ell}}}
+\newcommand{\mbsXi}{{\mbs{\Xi}}}
+\newcommand{\mbstheta}{{\mbs{\theta}}}
+\newcommand{\mbsTheta}{{\mbs{\Theta}}}
+\newcommand{\mbslambda}{{\mbs{\lambda}}}
+\newcommand{\MomentMatrix}{{\mbf{M}}}
+\newcommand{\slice}[1]{{\textrm{slice}(#1)}}
+\newcommand{\Symmetrize}[1]{{\textrm{Symm}\left(#1\right)}}
+\newcommand{\InnerProduct}[2]{{\left \langle #1, #2\right \rangle}}
+\newcommand{\SetSymbol}{{\mc{S}}}
+\newcommand{\SuchThat}{{\text{s.t.}}}
+\newcommand{\Value}{{\text{val}}}
+\newcommand{\PositiveSemidefiniteGeq}{{\ \succcurlyeq \ }}
+\newcommand{\OneVariable}{{1}}
+\newcommand{\Certificate}[1]{\mc{C}\left(#1\right)}
+\newcommand{\NumConstraints}{{n_{\text{constr.}}}}
+\newcommand{\ConstraintSet}{{\mc{A}}}
+\newcommand{\matvec}[1]{\text{vec}\left(#1\right)}
+\newcommand{\PsdMatrixSet}[1]{{\mathbb{S}_{+}^{#1}}}
+\newcommand{\PdMatrixSet}[1]{{\mathbb{S}_{++}^{#1}}}
+\newcommand{\spacespan}{{\text{span}}}
+\newcommand{\kron}{{\ \otimes \ }}
+\newcommand{\vech}[1]{{\text{vech}\left(#1\right)}}
+\newcommand{\vecmat}[1]{{\text{vec}\left(#1\right)}}
+\renewcommand{\vec}[1]{{\text{vec}\left(#1\right)}}
+\newcommand{\parenth}[1]{{\left(#1\right)}}
+\usepackage[nocomma]{optidef}
+\DeclareMathOperator{\Exp}{Exp}
+\DeclareMathOperator{\Log}{Log}
+
+\renewcommand{\theequation}{\arabic{equation}}
+
+\hypersetup{
+    colorlinks=true,   
+    urlcolor=cyan,
+    }
+
+\addbibresource{library.bib} % Bibtex file containing the references
+
+\title{Kalman Filter Exercise}
+\author{Irene Simier}
+
+\begin{document}
+
+\maketitle
+\input{sections/mass_spring_damper_system.tex}
+\input{sections/sensor_measurements.tex}
+\input{sections/continuous_time_system.tex}
+\input{sections/discretization.tex}
+\input{sections/kf.tex}
+\input{sections/ekf.tex}
+
+\printbibliography        % Prints the references with BibLaTeX
+
+\end{document}

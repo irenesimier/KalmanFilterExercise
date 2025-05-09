@@ -1,0 +1,34 @@
+\section{Sensor Measurements}
+
+In this system, we use two sensors to measure the position 
+and acceleration of the mass.
+
+The acceleration measurement, denoted \( u_{\text{acc}}(t) \), 
+is given by
+
+\begin{equation}
+    \begin{aligned}
+        u_{\text{acc}}(t) &= \ddot{r}(t) + w(t), 
+        \quad\quad w(t) \sim \mathcal{N}(0, Q(t)) \\
+        u_{\text{acc}}(t) &= \frac{1}{m} \left( f(t) - k r(t) - c \dot{r}(t) \right) + w(t), 
+    \end{aligned}
+    \label{eq:acc_measurement}
+\end{equation}
+
+
+where \( w(t) \) is zero-mean Gaussian noise with time-varying 
+covariance \( Q(t) \).
+\clearpage
+
+The position sensor provides a noisy measurement of the true position:
+
+\begin{equation}
+    y(t) = r(t) + v(t),
+    \quad\quad v(t) \sim \mathcal{N}(0, R(t))
+    \label{eq:pos_measurement}
+\end{equation}
+
+where \( v(t) \) is zero-mean Gaussian noise with covariance \( R(t) \).
+
+Together, these measurements are used for state estimation in 
+filtering and control algorithms.

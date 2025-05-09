@@ -1,0 +1,31 @@
+% Packages that must be loaded in a specific order because hyperref is a mess.
+% See http://www.macfreek.nl/memory/LaTeX_package_conflicts#Hyperref
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{decar-post}
+
+\RequirePackage{float}  % Improved interface for floats
+
+% TODO Workaround because beamer already loads hyperref with different options
+\makeatletter
+\@ifclassloaded{decar-pres} {
+    % Do nothing
+}{
+    \RequirePackage[colorlinks, citecolor=black, linkcolor=black,
+                    linktocpage=true, hidelinks]{hyperref}  % Hyperlinks
+}
+\makeatother
+
+\RequirePackage{algorithm}  %  Float wrapper for algpseudocode
+\RequirePackage{bookmark}  % New bookmark organization when used with hyperref
+
+% TODO Workaround because cleveref does not play nicely with beamer
+\makeatletter
+\@ifclassloaded{decar-pres} {
+    % Do nothing
+}{
+    \RequirePackage{cleveref}  % Enhances cross-referencing features TODO
+    \crefformat{equation}{(#2#1#3)}  % Proper equation format for cleveref
+    \Crefformat{equation}{Equation~(#2#1#3)}
+}
+\makeatother

@@ -1,0 +1,41 @@
+\section{Discretization}
+
+Using a Zero-Order-Hold (ZOH) discretization, the continuous-time system is converted into 
+the following discrete-time state-space form:
+
+\begin{align}
+    \mathbf{x}_k &= A_{k-1} \, \mathbf{x}_{k-1} + B_{k-1} \, a_{k-1} + \mathbf{w}_{k-1}, \quad \mathbf{w}_{k-1} \sim \mathcal{N}(0, Q_{k-1}) \\
+    y_k &= r_k + v_k, \quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad v_k \sim \mathcal{N}(0, R_k)
+\end{align}
+
+Here, \( \mathbf{x}_k \in \mathbb{R}^2 \) is the discrete-time state vector representing position and velocity,  
+\( a_{k-1} \) is the sampled acceleration input, and  \( y_k \) is the noisy position measurement.
+\( R_k \) is defined by the position sensor noise model.
+
+The matrices \( A_{k-1} \), \( B_{k-1} \) and \( Q_{k-1} \)  are derived by discretizing the continuous-time 
+system in equation \(\ref{eq:continuous_system}\). The process is as follows:
+
+\clearpage
+
+\textbf{Step 1: Compute \( A_d \) and \( B_d \) using ZOH}
+
+\begin{align}
+    M_{\text{zoh}} &= \begin{bmatrix}
+    A & B \\
+    0 & 0
+    \end{bmatrix} \cdot \Delta t \\
+    \begin{bmatrix} A_d & B_d \end{bmatrix} &= \exp(M_{\text{zoh}})
+\end{align}
+
+The process noise covariance \( Q_{k-1} \) can be computed using Van Loan’s method.
+
+\textbf{Step 2: Compute \( Q_k \) using Van Loan's method}
+
+\begin{align}
+    M_{\text{vl}} &= \begin{bmatrix}
+    -A & (L Q_c L^T) \\
+    0 & A^T
+    \end{bmatrix} \cdot \Delta t \\
+    \Phi &= \exp(M_{\text{vl}}) \\
+    Q_k &= A_d \cdot \Phi_{12}
+\end{align}

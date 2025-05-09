@@ -1,0 +1,23 @@
+% \section{Boolean Plus/Minus One Formulation}
+% For a boolean variable parametrized by $\theta_k\in \{-1, 1\}$, the problem becomes
+% \begin{mini*}|l|
+%     {\mbs{\xi}, \mbs{\theta}}{\sum_{k=1}^K \frac{\theta_k+1}{2} r_k^2(\mbs{\xi})}{}{}\tag{\text{MIX 2}}
+%     \label{prob:mix_boolean_pm_one}
+%     \addConstraint{\theta_k}{\in \{-1, 1\}}
+%     \addConstraint{\sum_{k=1}^K \theta_k}{=-K+2}
+% \end{mini*}
+% The lifted variables and the moment matrix remain the same as in the boolean zero or one case.
+% However, the each summand of the objective in \ref{prob:mix_boolean_pm_one} becomes
+% \begin{align}
+%     S_k & = \frac{\theta_k+1}{2} r_k^2(\mbs{\xi}),
+% \end{align}
+% and must be formulated in terms of the lifted variables
+% $\OneVariable ,\theta_k ,\theta_k \mbs{\xi}$ as
+% \begin{align}
+%     S_k & = \frac{\theta_k+1}{2} r_k^2(\mbs{\xi}) \\
+%         & =
+%     \frac{\theta_k+1}{2}(\mbsxi^\trans \mbf{Q}_{\mbsxi, k} \mbsxi
+%     +
+%     \mbf{b}^\trans \mbsxi
+%     + c_\mbsxi)
+% \end{align}
