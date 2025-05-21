@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import time
 from pymlg import SE2
 from SE2_functions import get_state
+from scipy.interpolate import make_interp_spline
 
 class RandomTrajectory:
     def __init__(self, x0=get_state(0,0,0), pos_var=1e-3, v_var=1e-3, w_var=1e-6, duration=60, dt=0.01):
@@ -87,7 +88,6 @@ class RandomTrajectory:
         plt.axis('equal')
         plt.grid(True)
         plt.legend()
-        plt.show()
 
     def plot_velocities(self):
         fig, axs = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
@@ -114,3 +114,4 @@ if __name__ == "__main__":
     traj = RandomTrajectory()
     traj.plot_trajectory()
     traj.plot_velocities()
+    traj.plt.show()

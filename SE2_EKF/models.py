@@ -5,17 +5,17 @@ from SE2_functions import van_loan_discretization
 class ProcessModel:
     def __init__(self, u, Q: np.ndarray, dt):
         self.dt = dt
-        self.u = u * self.dt
+        self.u = u
         self.Q = Q # continuous
 
     def evaluate(self, state):
-        return state @ SE2.Exp(self.u)
+        return state @ SE2.Exp(self.u * self.dt)
 
     def covariance(self, P):
         A = SE2.adjoint(SE2.Exp(self.u))
         L = - SE2.left_jacobian(- self.u)
-        _, _, Qd = van_loan_discretization(A, L, L, self.Q, self.dt)
-        P = A @ P @ A.T + L @ Qd @ L.T
+        Ad, Ld, Qd = van_loan_discretization(A, L, L, self.Q, self.dt)
+        P = Ad @ P @ Ad.T + Ld @ Qd @ Ld.T
         return P
 
 
