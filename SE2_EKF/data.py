@@ -4,10 +4,9 @@ import matplotlib.pyplot as plt
 import time
 from pymlg import SE2
 from SE2_functions import get_state
-from scipy.interpolate import make_interp_spline
 
 class RandomTrajectory:
-    def __init__(self, x0=get_state(0,0,0), pos_var=1e-3, v_var=1e-3, w_var=1e-6, duration=60, dt=0.01):
+    def __init__(self, x0=get_state(0,0,0), R=None, Q=None, duration=60, dt=0.01):
         # Sim params
         self.dt = dt
         self.t = np.arange(0, duration, dt)
@@ -22,9 +21,11 @@ class RandomTrajectory:
         self.noisy_odom = None
 
         # Covariance
-        self.R = np.array([[pos_var, 0.0],[0.0, pos_var]])
-        self.Q = np.sqrt(np.diag([self.dt*w_var, self.dt*v_var, self.dt*v_var])) # continuous-time variances
-
+        self.R = R if R is not None else np.array([[0.01, 0],
+                                                   [0, 0.01]])
+        self.Q = Q * dt if Q is not None else np.array([[0.1 * dt, 0, 0],
+                                                        [0, 0.1 * dt, 0],
+                                                        [0, 0, 0.1 * dt]])
         # Generate data
         self.generate_data()
 
@@ -110,8 +111,65 @@ class RandomTrajectory:
         plt.suptitle("Velocities (True vs. Noisy)")
         plt.show()
 
+class TxtTrajectory:
+    def __init__(self, R=None, Q=None):
+        self.dt = 0.01
+        self.R = R if R is not None else np.array([[0.01, 0],
+                                                   [0, 0.01]])
+        self.Q = Q * self.dt if Q is not None else np.array([[0.1 * self.dt, 0, 0],
+                                                             [0, 0.1 * self.dt, 0],
+                                                             [0, 0, 0.1 * self.dt]])
+
+        self.groundtruth = np.loadtxt("groundtruth.txt")
+        self.inputs = np.loadtxt("inputs.txt")  
+
+        self.t = []
+        self.gt_states = []
+        self.gps = []
+        self.noisy_gps = []
+        self.odom = []
+        self.noisy_odom = []
+
+        self.process_groundtruth()
+        self.process_inputs()
+
+    def process_groundtruth(self):
+        for row in self.groundtruth:
+            t, theta, x, y = row
+            self.t.append(t)
+            self.gt_states.append(get_state(theta, x, y))
+
+            xy = np.array([[x], [y]])
+            self.gps.append(xy)
+
+            noisy_xy = xy + np.random.multivariate_normal(mean=[0, 0], cov=self.R).reshape(2, 1)
+            self.noisy_gps.append(noisy_xy)
+
+        self.t = np.array(self.t)[1:]
+        self.gt_states = np.array(self.gt_states)[1:]
+        self.gps = np.array(self.gps)[1:]
+        self.noisy_gps = np.array(self.noisy_gps)[1:]
+
+    def process_inputs(self):
+        for row in self.inputs:
+            _, w, v = row
+            vec = np.array([[w], [v], [0]])
+            self.odom.append(vec)
+
+            noisy_vec = vec + np.random.multivariate_normal(mean=[0, 0, 0], cov=self.Q).reshape(3, 1)
+            self.noisy_odom.append(noisy_vec)
+            
+        self.odom = np.array(self.odom)
+        self.noisy_odom = np.array(self.noisy_odom)
+
 if __name__ == "__main__":
     traj = RandomTrajectory()
     traj.plot_trajectory()
     traj.plot_velocities()
-    traj.plt.show()
+
+    processor = TxtTrajectory()
+    print("States:", np.array(processor.gt_states).shape)
+    print("GPS:", np.array(processor.gps).shape)
+    print("Noisy GPS:", np.array(processor.noisy_gps).shape)
+    print("Odom:", np.array(processor.odom).shape)
+    print("Noisy Odom:", np.array(processor.noisy_odom).shape)

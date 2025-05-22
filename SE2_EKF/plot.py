@@ -60,14 +60,14 @@ class Plot:
             #error = SE2.inverse(self.states[i]) @ self.data.gt_states[i]
             d_xi.append(SE2.vee(SE2.log(error)))
 
-            # Get diagonal entries (variances) and compute ±3σ
-            diag_vars = np.diag(self.covariances[i])  # shape (3,)
-            sigma3.append(3 * np.sqrt(diag_vars))     # shape (3,)
+            # Covariance
+            diag_vars = np.diag(self.covariances[i]) 
+            sigma3.append(3 * np.sqrt(diag_vars))
 
-        d_xi = np.array(d_xi)        # shape (N, 3, 1)
-        sigma3 = np.array(sigma3)    # shape (N, 3)
+        d_xi = np.array(d_xi)
+        sigma3 = np.array(sigma3)
 
-        # Plot error and ±3σ bounds
+        # Plot error and 3 sigma bounds
         axs[0, 1].plot(self.data.t, d_xi[:, 0, 0], color='red', label='Error')
         axs[0, 1].plot(self.data.t, +sigma3[:, 0], 'k--', label='+3σ')
         axs[0, 1].plot(self.data.t, -sigma3[:, 0], 'k--', label='-3σ')

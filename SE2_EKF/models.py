@@ -28,5 +28,26 @@ class MeasurementModel:
         return np.array([state[0, 2], state[1, 2]]).reshape(2,1)
     
     def jacobian(self, state):
-        return - np.array([[0, state[0, 0], state[0, 1]],
-                           [0, state[1, 0], state[1, 1]]])
+        jac = - np.array([[0, state[0, 0], state[0, 1]],
+                                [0, state[1, 0], state[1, 1]]])
+        jac_fd = - self.jacobian_fd(state)    
+        assert np.allclose(jac_fd, jac, atol=1e-6)
+        
+        return jac
+    
+
+    def jacobian_fd(self, state, step_size=1e-6):
+        """
+        Used to check jacobian above
+        """
+        N = state.shape[0]
+        y = self.evaluate(state)
+        m = y.size
+        jac_fd = np.zeros((m, N))
+        for i in range(N):
+            dx = np.zeros((N,))
+            dx[i] = step_size
+            x_temp = state @ SE2.Exp(dx)
+            jac_fd[:, i] = (self.evaluate(x_temp) - y).flatten() / step_size
+
+        return jac_fd
