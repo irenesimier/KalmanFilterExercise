@@ -13,8 +13,8 @@ def main():
                   [0, 0.1, 0],
                   [0, 0, 0.1]])
     # Select how trajectory is generated
-    data = RandomTrajectory(x0, R, Q, duration=60, dt=0.01)
-    #data = TxtTrajectory(R, Q)
+    #data = RandomTrajectory(x0, R, Q, duration=60, dt=0.01)
+    data = TxtTrajectory(R, Q)
     
     P0 = np.eye(3) * 1e-3
     ekf = EKF(x0, P0)

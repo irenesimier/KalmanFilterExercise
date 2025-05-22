@@ -12,7 +12,7 @@ class ProcessModel:
         return state @ SE2.Exp(self.u * self.dt)
 
     def covariance(self, P):
-        A = SE2.adjoint(SE2.Exp(self.u))
+        A = SE2.adjoint(SE2.Exp(- self.u))
         L = - SE2.left_jacobian(- self.u)
         Ad, Ld, Qd = van_loan_discretization(A, L, L, self.Q, self.dt)
         P = Ad @ P @ Ad.T + Ld @ Qd @ Ld.T

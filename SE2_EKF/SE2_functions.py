@@ -1,19 +1,20 @@
 import numpy as np
 from scipy.linalg import expm
+from pymlg.numpy import SO2, SE2
 
 def get_state(theta, x, y):
-    c = np.cos(theta)
-    s = np.sin(theta)
-    return np.array([
-        [c, -s, x],
-        [s,  c, y],
-        [0,  0, 1]
-    ])
+#     c = np.cos(theta)
+#     s = np.sin(theta)
+#     return np.array([
+#         [c, -s, x],
+#         [s,  c, y],
+#         [0,  0, 1]
+#     ])
+    return SE2.from_components(SO2.Exp(theta), np.array([x, y]))
 
 def get_angle(state):
         theta = np.arctan2(state[1, 0], state[0, 0])
         return theta
-
 
 def van_loan_discretization(A, B, L, Qc, dt):
     n = A.shape[0]
